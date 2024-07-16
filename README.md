@@ -1,4 +1,4 @@
-# Expense Tracker App
+# Track It
 
 I developed a mobile app using Flutter that tracks your expenses effortlessly. It offers
 comprehensive insights with features like:
