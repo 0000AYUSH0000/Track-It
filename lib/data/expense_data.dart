@@ -42,13 +42,13 @@ class ExpenseData extends ChangeNotifier {
   }
 
   void editExpense(String newName, double newAmount, DateTime expenseDate,
-      String newCategory,String newCategoryIcon) {
+      String newCategory, String newCategoryIcon) {
     ExpenseItem updatedExpense = ExpenseItem(
         name: newName,
         amount: newAmount,
         dateTime: expenseDate,
         category: newCategory,
-    categoryIcon: newCategoryIcon);
+        categoryIcon: newCategoryIcon);
     db.editData(expenseDate, updatedExpense);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
@@ -73,7 +73,6 @@ class ExpenseData extends ChangeNotifier {
     DateTime today = DateTime.now();
     return DateTime(today.year, 1, 1);
   }
-
 
   Map<String, double> dailyExpenseSummary() {
     Map<String, double> dailyExpenseSummary = {};
@@ -112,25 +111,27 @@ class ExpenseData extends ChangeNotifier {
 
     return monthlyExpenseSummary;
   }
+
   Map<String, double> weeklyCategoryExpenseSummary() {
     Map<String, double> weeklyCategorySummary = {};
     DateTime startOfWeek = startOfWeekDate()!;
-    DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
+    DateTime endOfWeek = startOfWeek.add(const Duration(days: 6));
 
     for (var expense in overallExpenseList) {
-      if (expense.dateTime.isAfter(startOfWeek.subtract(const Duration(seconds: 1))) &&
+      if (expense.dateTime
+              .isAfter(startOfWeek.subtract(const Duration(seconds: 1))) &&
           expense.dateTime.isBefore(endOfWeek.add(const Duration(days: 1)))) {
         if (weeklyCategorySummary.containsKey(expense.category)) {
-          weeklyCategorySummary[expense.category] = (weeklyCategorySummary[expense.category] ?? 0) + expense.amount;
+          weeklyCategorySummary[expense.category] =
+              (weeklyCategorySummary[expense.category] ?? 0) + expense.amount;
         } else {
-          weeklyCategorySummary[expense.category]=expense.amount;
+          weeklyCategorySummary[expense.category] = expense.amount;
         }
       }
     }
 
     return weeklyCategorySummary;
   }
-
 
   // Category-wise expense summary for the current month
   Map<String, double> monthlyCategoryExpenseSummary() {
@@ -139,9 +140,11 @@ class ExpenseData extends ChangeNotifier {
     DateTime startOfMonth = DateTime(now.year, now.month, 1);
 
     for (var expense in overallExpenseList) {
-      if (expense.dateTime.isAfter(startOfMonth) || expense.dateTime.isAtSameMomentAs(startOfMonth)) {
+      if (expense.dateTime.isAfter(startOfMonth) ||
+          expense.dateTime.isAtSameMomentAs(startOfMonth)) {
         if (monthlyCategorySummary.containsKey(expense.category)) {
-          monthlyCategorySummary[expense.category] = (monthlyCategorySummary[expense.category] ?? 0) + expense.amount;
+          monthlyCategorySummary[expense.category] =
+              (monthlyCategorySummary[expense.category] ?? 0) + expense.amount;
         } else {
           monthlyCategorySummary[expense.category] = expense.amount;
         }
@@ -172,7 +175,3 @@ String getDayName(DateTime dateTime) {
       return 'nan';
   }
 }
-
-
-
-
