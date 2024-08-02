@@ -21,9 +21,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final newExpenseNameController = TextEditingController();
   final newExpenseAmountController = TextEditingController();
-  final newExpenseCategoryController=TextEditingController();
+  final newExpenseCategoryController = TextEditingController();
   String selectedSummary = 'Weekly';
-  String selectedCategory="";
+  String selectedCategory = "";
 
   void _onSelectionChanged(Set<String> newSelection) {
     setState(() {
@@ -43,64 +43,64 @@ class _HomePageState extends State<HomePage> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          scrollable: true,
-          title: const Text(
-            'Add New Expense',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration:
-                const InputDecoration(hintText: "Expense Title"),
-                controller: newExpenseNameController,
+              scrollable: true,
+              title: const Text(
+                'Add New Expense',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(
-                height: 15,
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    decoration:
+                        const InputDecoration(hintText: "Expense Title"),
+                    controller: newExpenseNameController,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  TextField(
+                    decoration:
+                        const InputDecoration(hintText: "Expense Amount"),
+                    controller: newExpenseAmountController,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CategorySelector(
+                    onCategorySelected: (category) {
+                      selectedCategory = category; // Update selected category
+                    },
+                  ),
+                ],
               ),
-              TextField(
-                decoration:
-                const InputDecoration(hintText: "Expense Amount"),
-                controller: newExpenseAmountController,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              CategorySelector(
-                onCategorySelected: (category) {
-                   selectedCategory = category; // Update selected category
-                },
-              ),
-
-            ],
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: saveExpense,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.greenAccent, // Background color
-              ),
-              child: const Text(
-                'Save',
-                style: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.bold),
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orangeAccent, // Background color
-              ),
-              onPressed: cancelExpense,
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.bold),
-              ),
-            )
-          ],
-        ));
+              actions: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orangeAccent, // Background color
+                  ),
+                  onPressed: cancelExpense,
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: saveExpense,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.greenAccent, // Background color
+                  ),
+                  child: const Text(
+                    'Save',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ));
   }
+
   void deleteExpense(ExpenseItem expense) {
     Provider.of<ExpenseData>(context, listen: false).deleteExpense(expense);
   }
@@ -110,7 +110,8 @@ class _HomePageState extends State<HomePage> {
         name: newExpenseNameController.text.trim(),
         amount: double.parse(newExpenseAmountController.text.trim()),
         dateTime: DateTime.now(),
-        category: selectedCategory, categoryIcon: 'assets/${selectedCategory.toLowerCase()}.png');
+        category: selectedCategory,
+        categoryIcon: 'assets/${selectedCategory.toLowerCase()}.png');
 
     Provider.of<ExpenseData>(context, listen: false).addNewExpense(expenseItem);
     newExpenseNameController.clear();
@@ -124,17 +125,18 @@ class _HomePageState extends State<HomePage> {
     newExpenseCategoryController.clear();
     Navigator.pop(context);
   }
+
   void editExpense(BuildContext context, ExpenseItem expense) {
     var editExpenseController = TextEditingController(text: expense.name);
     var editAmountController =
         TextEditingController(text: expense.amount.toString());
-    String currentSelectedCategory=expense.category;
+    String currentSelectedCategory = expense.category;
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          scrollable: true,
+              scrollable: true,
               title: const Text(
-                'Add New Expense',
+                'Edit Expense',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               content: Column(
@@ -155,35 +157,43 @@ class _HomePageState extends State<HomePage> {
                   ),
                   CategorySelector(
                     onCategorySelected: (category) {
-                      currentSelectedCategory = category; // Update selected category
+                      currentSelectedCategory =
+                          category; // Update selected category
                     },
                   ),
                 ],
               ),
               actions: [
                 ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.greenAccent, // Background color
-                    ),
-                    onPressed: () {
-                      Provider.of<ExpenseData>(context, listen: false)
-                          .editExpense(
-                              editExpenseController.text.trim(),
-                              double.parse(editAmountController.text.trim()),
-                              expense.dateTime,
-                      currentSelectedCategory,'assets/${currentSelectedCategory.toLowerCase()}.png');
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Save',style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),),),
-                ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orangeAccent, // Background color
                   ),
                   onPressed: cancelExpense,
-                  child: const Text('Cancel',style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),),
-                )
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.greenAccent, // Background color
+                  ),
+                  onPressed: () {
+                    Provider.of<ExpenseData>(context, listen: false).editExpense(
+                        editExpenseController.text.trim(),
+                        double.parse(editAmountController.text.trim()),
+                        expense.dateTime,
+                        currentSelectedCategory,
+                        'assets/${currentSelectedCategory.toLowerCase()}.png');
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Save',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ],
             ));
   }
@@ -238,7 +248,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                   IconButton(
                       onPressed: () {
-                        Navigator.of(context).push(createPageRoute(AnalyticsPage()));
+                        Navigator.of(context)
+                            .push(createPageRoute(const AnalyticsPage()));
                       },
                       icon: const Icon(
                         Icons.analytics_outlined,
@@ -277,7 +288,8 @@ class _HomePageState extends State<HomePage> {
                             value.getAllExpenseList()[index].name;
                         double expenseAmount =
                             value.getAllExpenseList()[index].amount;
-                        String expenseCategory=value.getAllExpenseList()[index].category;
+                        String expenseCategory =
+                            value.getAllExpenseList()[index].category;
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -288,8 +300,8 @@ class _HomePageState extends State<HomePage> {
                                         .dateTime) !=
                                     convertedDateTime)
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 6.0,horizontal: 10),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 6.0, horizontal: 10),
                                 child: Text(
                                   convertedDateTime,
                                   style: TextStyle(
